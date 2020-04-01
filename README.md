@@ -1,9 +1,7 @@
 # Multiple-Drug-Resistance Categorization & Case-Count Report Program
 
 ###### Author: Eric Zhewen Li
-
 ###### Boni Lab, Center for Infectious Disease Dynamics, Penn State Huck Institutes of the Life Sciences
-
 ###### Contact: eric@zhewenli.com
 
 This repo contains all the Jupyter Notebook files showing the outcome measure calculation functions for the Multiple-Drug-Resistance (MDR) Analysis.
