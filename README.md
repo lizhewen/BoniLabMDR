@@ -1,12 +1,17 @@
 # Multiple-Drug-Resistance Categorization & Case-Count Report Program
 
-###### Author: Eric Zhewen Li<br/>Boni Lab, Center for Infectious Disease Dynamics, Penn State Huck Institutes of the Life Sciences<br/>Contact: eric@zhewenli.com
+###### Author: Eric Zhewen Li<br/>
+Boni Lab, Center for Infectious Disease Dynamics, Penn State Huck Institutes of the Life Sciences. mol.ax<br/>
+Contact: eric@zhewenli.com<br>
+&copy; 2020. Under MIT License. All Rights Reserved.
 
 This repo contains all the Jupyter Notebook files showing the outcome measure calculation functions for the Multiple-Drug-Resistance (MDR) Analysis.
 
 ## Introduction
 
-The main program, called `BoniLabMDR.ipynb`, contains a series of functions that parses, processes, and analyzes the output txt file from Boni Lab's stochastic Malaria simulation models. The program also provides a series of visualizations to intuitively show the emergence of drug-resistance for Malaria.
+The main program, called `BoniLabMDR.ipynb`, contains a series of functions that parses, processes, and analyzes the output file from Boni Lab's stochastic Malaria simulation models. The program also provides a series of visualizations to intuitively show the emergence of drug-resistance for Malaria.
+
+The main program takes in the monthly reported output file from Boni Lab's Individual-Based-Microsimulation (GitHub Repo [Here](https://github.com/maciekboni/PSU-CIDD-Malaria-Simulation/)). The file is  tab-separated and in `txt` format. Currently this Python program only supports single-location scenarios - output files from [this fork](https://github.com/lizhewen/PSU-CIDD-Malaria-Simulation) of the simulation. This program intends to analyze and create visuals for the simulation, including MDR analysis for the Multiple-Firstline-Therapy (MFT).
 
 The program is open-sourced under MIT License. There is much freedom with MIT License, but you must include the original license here and properly cite this as your source.
 
