@@ -16,7 +16,7 @@ The program is open-sourced under MIT License. There is much freedom with MIT Li
 
 The program, written in Python, is available and presented by Jupyter Notebook and hence in `ipynb` format. You can either download the file and run it locally, or you can use [Google Colab](https://colab.research.google.com) (recommended) to open and run, by using its GitHub import function.
 
-When you open the program, go to the "Main Function - Start Here" section, where it shows a sample scenario of the program usage prepared by me. If you would like to run the program using your own file, you need to first run all the functions defined in the "Function defs" section, uploading your file if you are using Google Colab, and change variable to the your filepath. Then you can use the program and get results by calling corresponding functions with proper arguments.
+When you open the program, go to the "Main Function - Start Here" section, where it shows a sample scenario of the program usage prepared by me. If you would like to run the program using your own file, you need to first run all the functions defined in the "Function defs" section, uploading your file if you are using Google Colab, and change the parameter to your filepath. Then you can use the program and get results by calling the assembling function with corresponding plot option as parameter.
 
 ## About archives
 
