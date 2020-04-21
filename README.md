@@ -14,9 +14,22 @@ The program is open-sourced under MIT License. There is much freedom with MIT Li
 
 ## How to use the program
 
+### 1. [MDR Categorization & Case-Count Report Program](/BoniLabMDR.ipynb)
+
 The program, written in Python, is available and presented by Jupyter Notebook and hence in `ipynb` format. You can either download the file and run it locally, or you can use [Google Colab](https://colab.research.google.com) (recommended) to open and run, by using its GitHub import function.
 
-When you open the program, go to the "Main Function - Start Here" section, where it shows a sample scenario of the program usage prepared by me. If you would like to run the program using your own file, you need to first run all the functions defined in the "Function defs" section, uploading your file if you are using Google Colab, and change the parameter to your filepath. Then you can use the program and get results by calling the assembling function with corresponding plot option as parameter.
+When you open the program, go to the "Result Assembling - Start Here" section, where it shows a sample scenario of the program usage prepared by me. If you would like to run the program using your own file, you need to first run all the functions defined in the "Function defs" section, uploading your file if you are using Google Colab, and change the parameter to your filepath. Then you can use the program and get results by calling the assembling function with corresponding plot option as parameter.
+
+### 2. [Most Dangerous MDR Case Analysis Program](/MostDangerousMDR.ipynb)
+
+This program is similar to the first program. But instead of plotting on and tracking all the genotypes, this program specifically targets at the two most dangerous genotypes:
+
+- Encoding `TYY--Y2*`: this genotype has the highest resistance to AQ, and is also resistant to DHA-PPQ
+- Encoding `KNFNFY2*`: this genotype has the highest resistance to LM, and is also resistant to DHA-PPQ
+
+### 3. [Mutation Pair Analysis Program](/MutationPairAnalysis.ipynb)
+
+In my fork of the simulation, there is a branch called "eric_new_reporter", where an additional file called "mut_arrival.txt" is generated apart from the other two output files. This file is comma-separated and contains info about all the mutation events occurred during the simulation, in the form of "time, from_id, to_id". This python program  takes in this file and returns a series of visuals for further analysis.
 
 ## About archives
 
