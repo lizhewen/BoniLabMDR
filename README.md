@@ -58,6 +58,10 @@ In the assembly (main) function, the `plot` parameter controls which plots to be
 
 In my fork of the simulation, there is a branch called "eric_new_reporter", where an additional file called "mut_arrival.txt" is generated apart from the other two output files. This file is comma-separated and contains info about all the mutation events occurred during the simulation, in the form of "time, from_id, to_id". This python program  takes in this file and returns a series of visuals for further analysis.
 
+### 3. [Genotype Risk Analysis Program](/GenotypeRiskAnalysis.ipynb)
+
+This program targets at one or more genotype of your selection, estimate a portion of the blood slide prevalence, i.e. how many people are infected by this genotype(s), and then plot a diagram. By specifying start- and end-year, the program shades the specified area under the curve, and then use `numpy.trapz` to calculate the area.
+
 ## About archives
 
 This program could not be developed without my Summer Internship at Boni Lab of Penn State's CIDD. All the testing codes and notebooks (May-Aug 2019) are archived in the folder for references. A separate data-visualization web app is also under development.
