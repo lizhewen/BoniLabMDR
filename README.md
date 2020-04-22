@@ -20,14 +20,41 @@ The program, written in Python, is available and presented by Jupyter Notebook a
 
 When you open the program, go to the "Result Assembling - Start Here" section, where it shows a sample scenario of the program usage prepared by me. If you would like to run the program using your own file, you need to first run all the functions defined in the "Function defs" section, uploading your file if you are using Google Colab, and change the parameter to your filepath. Then you can use the program and get results by calling the assembling function with corresponding plot option as parameter.
 
-### 2. [Most Dangerous MDR Case Analysis Program](/MostDangerousMDR.ipynb)
+#### Plots and Options:
 
-This program is similar to the first program. But instead of plotting on and tracking all the genotypes, this program specifically targets at the two most dangerous genotypes:
+In the assembly (main) function, the `plot` parameter controls which plots to be returned. There are four types and they are:
 
-- Encoding `TYY--Y2*`: this genotype has the highest resistance to AQ, and is also resistant to DHA-PPQ
-- Encoding `KNFNFY2*`: this genotype has the highest resistance to LM, and is also resistant to DHA-PPQ
+1. `plot='bsp'`: This option returns blood slide prevalence plot, with 'Years' on x-axis and 'blood slide prevalence' (percentage of population) on y-axis.
 
-### 3. [Mutation Pair Analysis Program](/MutationPairAnalysis.ipynb)
+2. MDR plots:
+
+   These two options return a series of genotype frequency plots, from each ACT (drugget)'s perspectives. For example, if DHA-PPQ->AS-AQ->AL Cycling is used, three subplots will be generated, from the perspectives of DHA-PPQ (Artemisinin and PPQ), AS-AQ, AL, respectively.
+
+   The legend is also normalized to correspond to the danger level of each genotype group:
+
+   | Resistance Strength | Drug Efficacy | Legend Color            |
+   | ------------------- | ------------- | ----------------------- |
+   | 0-0                 | $[90,∞)$      | \#8DFD0F, green         |
+   |                     | $[80,90)$     | \#3497FF, blue          |
+   | 1-1                 |               | \#FAD996, light orange  |
+   | 1-2                 | $[70,80)$     | \#FFAB00, medium orange |
+   | 1-3                 |               | \#C76400, dark orange   |
+   | 2-1                 | $[60,70)$     | \#F09187, light red     |
+   | 2-2                 |               | \#FF1A00, medium red    |
+   | 2-3                 | $[0,60)$      | \#A91606, dark red      |
+   | 2-4                 |               | \#000000, black         |
+
+   1. `plot='mdr1'`: This option summarizes / categorizes by each genotype's drug resistance. This options uses `resistant_strength_calc` function and the resistance is formatted as `a-b`, where `a` being  how many drugs the genotype is resistant to, and `b` being how many mutation events occurred with the genotype. Refer to the function def for more info.
+
+   2. `plot='mdr2'`: This option summarizes by each genotype's drug efficacy.
+
+   3. `plot='mdca'`: This option targets specifically the two most-dangerous genotypes in the simulation:
+
+      - Encoding `TYY--Y2*`: this genotype has the highest resistance to AQ, and is also resistant to DHA-PPQ
+
+      - Encoding `KNFNFY2*`: this genotype has the highest resistance to LM, and is also resistant to DHA-PPQ
+
+### 2. [Mutation Pair Analysis Program](/MutationPairAnalysis.ipynb)
 
 In my fork of the simulation, there is a branch called "eric_new_reporter", where an additional file called "mut_arrival.txt" is generated apart from the other two output files. This file is comma-separated and contains info about all the mutation events occurred during the simulation, in the form of "time, from_id, to_id". This python program  takes in this file and returns a series of visuals for further analysis.
 
