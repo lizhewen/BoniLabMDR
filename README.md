@@ -61,3 +61,7 @@ In my fork of the simulation, there is a branch called "eric_new_reporter", wher
 ## About archives
 
 This program could not be developed without my Summer Internship at Boni Lab of Penn State's CIDD. All the testing codes and notebooks (May-Aug 2019) are archived in the folder for references. A separate data-visualization web app is also under development.
+
+## Future Development Area
+
+Due to time constraint, there are several improvements could be implemented. One thing is that the parser function is now shared across two Jupyter notebooks and currently it's implemented by simply copy-and-pasting. In the future, functions should be extracted to python `.py` files and stored in Google Drive or S3 Bucket. The notebooks should be made for pure visualization purposes and import those functions as they need.
