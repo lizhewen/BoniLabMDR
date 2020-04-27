@@ -35,14 +35,14 @@ In the assembly (main) function, the `plot` parameter controls which plots to be
    | Resistance Strength | Drug Efficacy | Legend Color            |
    | ------------------- | ------------- | ----------------------- |
    | 0-0                 | [90,∞)      | \#8DFD0F, green         |
-   |                     | [80,90)     | \#3497FF, blue          |
-   | 1-1                 |               | \#FAD996, light orange  |
+   | *N/A* | [80,90)     | \#3497FF, blue          |
+   | 1-1                 | *N/A* | \#FAD996, light orange  |
    | 1-2                 | [70,80)     | \#FFAB00, medium orange |
-   | 1-3                 |               | \#C76400, dark orange   |
+   | 1-3                 | *N/A* | \#C76400, dark orange   |
    | 2-1                 | [60,70)     | \#F09187, light red     |
-   | 2-2                 |               | \#FF1A00, medium red    |
+   | 2-2                 | *N/A* | \#FF1A00, medium red    |
    | 2-3                 | [0,60)      | \#A91606, dark red      |
-   | 2-4                 |               | \#000000, black         |
+   | 2-4                 | *N/A* | \#000000, black         |
 
    1. `plot='mdr1'`: This option summarizes / categorizes by each genotype's drug resistance. This options uses `resistant_strength_calc` function and the resistance is formatted as `a-b`, where `a` being  how many drugs the genotype is resistant to, and `b` being how many mutation events occurred with the genotype. Refer to the function def for more info.
 
