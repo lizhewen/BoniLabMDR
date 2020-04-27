@@ -50,9 +50,9 @@ In the assembly (main) function, the `plot` parameter controls which plots to be
 
    3. `plot='mdca'`: This option targets specifically the two most-dangerous genotypes in the simulation:
 
-      - Encoding `TYY--Y2*`: this genotype has the highest resistance to AQ, and is also resistant to DHA-PPQ
-
-      - Encoding `KNFNFY2*`: this genotype has the highest resistance to LM, and is also resistant to DHA-PPQ
+      - Encoding `TYY**Y2*`: this genotype has the highest resistance to AQ, and is also resistant to DHA-PPQ
+- This includes `TYY--Y2x/X` and `TYYYYY2x/X` - they both have 0.735 efficacy under ASAQ (0.633 under AQ) and 0.415 efficacy under DHA-PPQ
+      - Encoding `KNFNFY2x/X`: this genotype has the highest resistance to LM (0.422 efficacy), and is also resistant to DHA-PPQ (0.415 efficacy)
 
 ### 2. [Mutation Pair Analysis Program](/MutationPairAnalysis.ipynb)
 
