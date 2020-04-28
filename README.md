@@ -34,7 +34,7 @@ In the assembly (main) function, the `plot` parameter controls which plots to be
 
    | Resistance Strength | Drug Efficacy | Legend Color            |
    | ------------------- | ------------- | ----------------------- |
-   | 0-0                 | [90,∞)      | \#8DFD0F, green         |
+   | 0-0                 | [90,∞)      | \#32CD32, green         |
    | *N/A* | [80,90)     | \#3497FF, blue          |
    | 1-1                 | *N/A* | \#FAD996, light orange  |
    | 1-2                 | [70,80)     | \#FFAB00, medium orange |
