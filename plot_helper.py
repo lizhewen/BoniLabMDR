@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+from constant import HEADLINE, ENCODINGDB
 
 def xaxis_label_ticker(scale_x=365, burnin_year=10):
   # Ticker function that labels x-axis in years
@@ -34,14 +35,12 @@ def parse(file_name, interested_col = [0,2,8,12] + list(range(22,150))):
   #  #12 - Blood Slide Prevalence
   #  #22-149 - Parasite Count by Genotypes
 
-  headline = "current_time\tsclock_to_time\tyear\tmonth\tday\tseasonal_fac\ttreated_p_5-\ttreated_p_5+\tpopulation\tsep\tEIR_loc_yr\tsep\tblood_slide_prev\tbsp_2_10\tbsp_0_5\tsep\tmonthly_new_inf\tsep\tmon_treatment\tsep\tmon_clinical_ep\tsep\tKNY--C1x\tKNY--C1X\tKNY--C2x\tKNY--C2X\tKNY--Y1x\tKNY--Y1X\tKNY--Y2x\tKNY--Y2X\tKYY--C1x\tKYY--C1X\tKYY--C2x\tKYY--C2X\tKYY--Y1x\tKYY--Y1X\tKYY--Y2x\tKYY--Y2X\tKNF--C1x\tKNF--C1X\tKNF--C2x\tKNF--C2X\tKNF--Y1x\tKNF--Y1X\tKNF--Y2x\tKNF--Y2X\tKYF--C1x\tKYF--C1X\tKYF--C2x\tKYF--C2X\tKYF--Y1x\tKYF--Y1X\tKYF--Y2x\tKYF--Y2X\tKNYNYC1x\tKNYNYC1X\tKNYNYC2x\tKNYNYC2X\tKNYNYY1x\tKNYNYY1X\tKNYNYY2x\tKNYNYY2X\tKYYYYC1x\tKYYYYC1X\tKYYYYC2x\tKYYYYC2X\tKYYYYY1x\tKYYYYY1X\tKYYYYY2x\tKYYYYY2X\tKNFNFC1x\tKNFNFC1X\tKNFNFC2x\tKNFNFC2X\tKNFNFY1x\tKNFNFY1X\tKNFNFY2x\tKNFNFY2X\tKYFYFC1x\tKYFYFC1X\tKYFYFC2x\tKYFYFC2X\tKYFYFY1x\tKYFYFY1X\tKYFYFY2x\tKYFYFY2X\tTNY--C1x\tTNY--C1X\tTNY--C2x\tTNY--C2X\tTNY--Y1x\tTNY--Y1X\tTNY--Y2x\tTNY--Y2X\tTYY--C1x\tTYY--C1X\tTYY--C2x\tTYY--C2X\tTYY--Y1x\tTYY--Y1X\tTYY--Y2x\tTYY--Y2X\tTNF--C1x\tTNF--C1X\tTNF--C2x\tTNF--C2X\tTNF--Y1x\tTNF--Y1X\tTNF--Y2x\tTNF--Y2X\tTYF--C1x\tTYF--C1X\tTYF--C2x\tTYF--C2X\tTYF--Y1x\tTYF--Y1X\tTYF--Y2x\tTYF--Y2X\tTNYNYC1x\tTNYNYC1X\tTNYNYC2x\tTNYNYC2X\tTNYNYY1x\tTNYNYY1X\tTNYNYY2x\tTNYNYY2X\tTYYYYC1x\tTYYYYC1X\tTYYYYC2x\tTYYYYC2X\tTYYYYY1x\tTYYYYY1X\tTYYYYY2x\tTYYYYY2X\tTNFNFC1x\tTNFNFC1X\tTNFNFC2x\tTNFNFC2X\tTNFNFY1x\tTNFNFY1X\tTNFNFY2x\tTNFNFY2X\tTYFYFC1x\tTYFYFC1X\tTYFYFC2x\tTYFYFC2X\tTYFYFY1x\tTYFYFY1X\tTYFYFY2x\tTYFYFY2X\tsep\tKNY--C1x\tKNY--C1X\tKNY--C2x\tKNY--C2X\tKNY--Y1x\tKNY--Y1X\tKNY--Y2x\tKNY--Y2X\tKYY--C1x\tKYY--C1X\tKYY--C2x\tKYY--C2X\tKYY--Y1x\tKYY--Y1X\tKYY--Y2x\tKYY--Y2X\tKNF--C1x\tKNF--C1X\tKNF--C2x\tKNF--C2X\tKNF--Y1x\tKNF--Y1X\tKNF--Y2x\tKNF--Y2X\tKYF--C1x\tKYF--C1X\tKYF--C2x\tKYF--C2X\tKYF--Y1x\tKYF--Y1X\tKYF--Y2x\tKYF--Y2X\tKNYNYC1x\tKNYNYC1X\tKNYNYC2x\tKNYNYC2X\tKNYNYY1x\tKNYNYY1X\tKNYNYY2x\tKNYNYY2X\tKYYYYC1x\tKYYYYC1X\tKYYYYC2x\tKYYYYC2X\tKYYYYY1x\tKYYYYY1X\tKYYYYY2x\tKYYYYY2X\tKNFNFC1x\tKNFNFC1X\tKNFNFC2x\tKNFNFC2X\tKNFNFY1x\tKNFNFY1X\tKNFNFY2x\tKNFNFY2X\tKYFYFC1x\tKYFYFC1X\tKYFYFC2x\tKYFYFC2X\tKYFYFY1x\tKYFYFY1X\tKYFYFY2x\tKYFYFY2X\tTNY--C1x\tTNY--C1X\tTNY--C2x\tTNY--C2X\tTNY--Y1x\tTNY--Y1X\tTNY--Y2x\tTNY--Y2X\tTYY--C1x\tTYY--C1X\tTYY--C2x\tTYY--C2X\tTYY--Y1x\tTYY--Y1X\tTYY--Y2x\tTYY--Y2X\tTNF--C1x\tTNF--C1X\tTNF--C2x\tTNF--C2X\tTNF--Y1x\tTNF--Y1X\tTNF--Y2x\tTNF--Y2X\tTYF--C1x\tTYF--C1X\tTYF--C2x\tTYF--C2X\tTYF--Y1x\tTYF--Y1X\tTYF--Y2x\tTYF--Y2X\tTNYNYC1x\tTNYNYC1X\tTNYNYC2x\tTNYNYC2X\tTNYNYY1x\tTNYNYY1X\tTNYNYY2x\tTNYNYY2X\tTYYYYC1x\tTYYYYC1X\tTYYYYC2x\tTYYYYC2X\tTYYYYY1x\tTYYYYY1X\tTYYYYY2x\tTYYYYY2X\tTNFNFC1x\tTNFNFC1X\tTNFNFC2x\tTNFNFC2X\tTNFNFY1x\tTNFNFY1X\tTNFNFY2x\tTNFNFY2X\tTYFYFC1x\tTYFYFC1X\tTYFYFC2x\tTYFYFC2X\tTYFYFY1x\tTYFYFY1X\tTYFYFY2x\tTYFYFY2X\tsep\t\t"
-
   # define name of temporary dummy file
   dummy_file = file_name[:-4] + '_parsed.txt'
   # open original file in read mode and dummy file in write mode
   with open(file_name, 'r') as read_obj, open(dummy_file, 'w') as write_obj:
     # Write given line to the dummy file
-    write_obj.write(headline + '\n')
+    write_obj.write(HEADLINE + '\n')
     # Read lines from original file one by one and append them to the dummy file
     for line in read_obj:
       write_obj.write(line)
@@ -144,43 +143,17 @@ def df_col_replace(original_df, drugset, option):
   #   `2` replace column name with its corresponding drug efficacy wrt. the current drugset.
 
   df = original_df.copy(deep=True)
-  encodingdb = ['KNY--C1x', 'KNY--C1X', 'KNY--C2x', 'KNY--C2X', 'KNY--Y1x', 
-                'KNY--Y1X', 'KNY--Y2x', 'KNY--Y2X', 'KYY--C1x', 'KYY--C1X', 
-                'KYY--C2x', 'KYY--C2X', 'KYY--Y1x', 'KYY--Y1X', 'KYY--Y2x', 
-                'KYY--Y2X', 'KNF--C1x', 'KNF--C1X', 'KNF--C2x', 'KNF--C2X', 
-                'KNF--Y1x', 'KNF--Y1X', 'KNF--Y2x', 'KNF--Y2X', 'KYF--C1x', 
-                'KYF--C1X', 'KYF--C2x', 'KYF--C2X', 'KYF--Y1x', 'KYF--Y1X', 
-                'KYF--Y2x', 'KYF--Y2X', 'KNYNYC1x', 'KNYNYC1X', 'KNYNYC2x', 
-                'KNYNYC2X', 'KNYNYY1x', 'KNYNYY1X', 'KNYNYY2x', 'KNYNYY2X', 
-                'KYYYYC1x', 'KYYYYC1X', 'KYYYYC2x', 'KYYYYC2X', 'KYYYYY1x', 
-                'KYYYYY1X', 'KYYYYY2x', 'KYYYYY2X', 'KNFNFC1x', 'KNFNFC1X', 
-                'KNFNFC2x', 'KNFNFC2X', 'KNFNFY1x', 'KNFNFY1X', 'KNFNFY2x', 
-                'KNFNFY2X', 'KYFYFC1x', 'KYFYFC1X', 'KYFYFC2x', 'KYFYFC2X', 
-                'KYFYFY1x', 'KYFYFY1X', 'KYFYFY2x', 'KYFYFY2X', 'TNY--C1x', 
-                'TNY--C1X', 'TNY--C2x', 'TNY--C2X', 'TNY--Y1x', 'TNY--Y1X', 
-                'TNY--Y2x', 'TNY--Y2X', 'TYY--C1x', 'TYY--C1X', 'TYY--C2x', 
-                'TYY--C2X', 'TYY--Y1x', 'TYY--Y1X', 'TYY--Y2x', 'TYY--Y2X', 
-                'TNF--C1x', 'TNF--C1X', 'TNF--C2x', 'TNF--C2X', 'TNF--Y1x', 
-                'TNF--Y1X', 'TNF--Y2x', 'TNF--Y2X', 'TYF--C1x', 'TYF--C1X', 
-                'TYF--C2x', 'TYF--C2X', 'TYF--Y1x', 'TYF--Y1X', 'TYF--Y2x', 
-                'TYF--Y2X', 'TNYNYC1x', 'TNYNYC1X', 'TNYNYC2x', 'TNYNYC2X', 
-                'TNYNYY1x', 'TNYNYY1X', 'TNYNYY2x', 'TNYNYY2X', 'TYYYYC1x', 
-                'TYYYYC1X', 'TYYYYC2x', 'TYYYYC2X', 'TYYYYY1x', 'TYYYYY1X', 
-                'TYYYYY2x', 'TYYYYY2X', 'TNFNFC1x', 'TNFNFC1X', 'TNFNFC2x', 
-                'TNFNFC2X', 'TNFNFY1x', 'TNFNFY1X', 'TNFNFY2x', 'TNFNFY2X', 
-                'TYFYFC1x', 'TYFYFC1X', 'TYFYFC2x', 'TYFYFC2X', 'TYFYFY1x', 
-                'TYFYFY1X', 'TYFYFY2x', 'TYFYFY2X']
   replacedict = {}
 
   # prepare dictionary based on resistance strength
   if option==1:
-    for genotype in encodingdb:
+    for genotype in ENCODINGDB:
       replacedict[genotype] = resistant_strength_calc(genotype, drugset)
   # prepare dictionary based on drug efficacy
   elif option==2:
     efficacydf = pd.read_csv('https://github.com/lizhewen/BoniLabMDR/raw/master/ef2020.csv')
     efficacydf = efficacydf.set_index('Shortname').iloc[:,1:]
-    for genotype in encodingdb:
+    for genotype in ENCODINGDB:
       replacedict[genotype] = round(efficacydf.loc[genotype,drugset], 3)
   else:
     print("Option not found.")
