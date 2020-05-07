@@ -56,6 +56,19 @@ def parse(file_name, interested_col = [0,2,8,12] + list(range(22,150))):
   # Error if file not single-location'd
   return None
 
+def mutpair_parse(file_name):
+  dummy_file = file_name[:-4] + '_parsed.txt'
+  # open original file in read mode and dummy file in write mode
+  with open(file_name, 'r') as read_obj, open(dummy_file, 'w') as write_obj:
+    # Write given line to the dummy file
+    write_obj.write('time,from,to' + '\n')
+    # Read lines from original file one by one and append them to the dummy file
+    for line in read_obj:
+      write_obj.write(line)
+
+  df = pd.read_csv(dummy_file, sep=',')
+  return df
+
 def resistant_strength_calc(pattern, drugname, option=1):
   # Drug Resistant Strength Calculation Function
   # 
