@@ -22,12 +22,16 @@ def mutpair_scatter_plot(df, drugsets, efficacydf, strategy,
     #annotate_place = df.iloc[:,:-4].max().max()
     efficacy_dict = efficacydf[drugset].to_dict()
     temp = df.copy()
+    temp['color'] = 'blue'
+    # filter out most dangerous triple
+    mdt_filter = temp.to.str.contains('^(TYY..Y2.)|(KNFNFY2.)$', regex= True, na=False)
+    temp.loc[mdt_filter, 'color'] = 'orange'
+
     temp['eff'] = temp['to'].replace(efficacy_dict).astype(str)
     temp['eff'] = temp['eff'].str[:5]
     temp['eff_to'] = temp['eff'] + ' ' + temp['to']
-    #temp['eff_to'] = temp['to'].replace(efficacy_dict).astype(str).str[:5] + ' ' + temp['to']
-    temp = temp.sort_values(by=['eff_to'])
-    ax.scatter(temp['time'], temp['eff_to'])
+    temp = temp.sort_values(by=['eff_to'])    
+    ax.scatter(temp['time'], temp['eff_to'], color=temp['color'])
 
     ax.xaxis.set_major_locator(ticker.MultipleLocator(xlocator))
     ax.xaxis.set_major_formatter(ticks_x)
@@ -43,3 +47,15 @@ def mutpair_scatter_plot(df, drugsets, efficacydf, strategy,
     # ax.set_ylim(top=annotate_place+0.1)
     # # End Annotation
     ax.grid()
+
+def mutpair_period_count(year_range_by_period, df, regex=''):
+  ans = ''
+  for interval in year_range_by_period:
+    # dafult: no filter
+    if regex == '':
+      count = df.loc[(df['time']>interval[0]*365) & (df['time']<=interval[1]*365)].shape[0]
+    else:
+      count = df.loc[(df['time']>interval[0]*365) & (df['time']<=interval[1]*365) & (df.to.str.contains(regex, regex= True, na=False))].shape[0]
+    ans += '%s,\n' % count
+  return ans
+  
