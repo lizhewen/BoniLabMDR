@@ -2,3 +2,4 @@
 ./*.txt
 __pycache__/
 data/*_parsed.txt
+data/*/*/p_*.txt

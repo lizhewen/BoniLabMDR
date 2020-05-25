@@ -1,7 +1,8 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-from constant import HEADLINE, ENCODINGDB
+from constant import HEADLINE, ENCODINGDB, REPORTDAYS
 
 def xaxis_label_ticker(scale_x=365, burnin_year=10):
   # Ticker function that labels x-axis in years
@@ -210,4 +211,48 @@ def coloring_legend(mdr_case, option):
     else:
       return "#A91606" # [0,60) - dark red
 
+def IQR_compute(filepattern):
+  # This function takes in 100 output files from 
+  #   simulation with the same setting, and compute
+  #   the IQR for the genotype frequency and returns 
+  #   three dataframes (LQ, Median, and UQ).
+  allgenodf = []
+  for i in range(128):
+    allgenodf.append(pd.DataFrame(columns = range(361)))
+  from constant import HEADLINE, ENCODINGDB, REPORTDAYS
+  for j in range(1,101):
+    file_name = filepattern % j
+    dummy_file = 'p_' + file_name
+    # open original file in read mode and dummy file in write mode
+    with open(file_name, 'r') as read_obj, open(dummy_file, 'w') as write_obj:
+      # Write given line to the dummy file
+      write_obj.write(HEADLINE + '\n')
+      # Read lines from original file one by one and append them to the dummy file
+      for line in read_obj:
+        write_obj.write(line)
+    df = pd.read_csv(dummy_file, sep='\t')
+    for (genotype, dfcounter) in zip(ENCODINGDB, range(128)):
+      allgenodf[dfcounter] = allgenodf[dfcounter].append(df[genotype], ignore_index=True)
+  
+  L_IQRdf = pd.DataFrame(columns = ['current_time'] + ENCODINGDB)
+  M_IQRdf = pd.DataFrame(columns = ['current_time'] + ENCODINGDB)
+  U_IQRdf = pd.DataFrame(columns = ['current_time'] + ENCODINGDB)
+
+  for k in range(128):
+    temp_IQR_result = allgenodf[k].quantile([.25, .5, .75]).values.tolist()
+    # can't compute IQR for all 0's
+    if len(temp_IQR_result[0]) == 0:
+      L_IQRdf[ENCODINGDB[k]] = [0] * 361
+      M_IQRdf[ENCODINGDB[k]] = [0] * 361
+      U_IQRdf[ENCODINGDB[k]] = [0] * 361
+    else:
+      L_IQRdf[ENCODINGDB[k]] = temp_IQR_result[0]
+      M_IQRdf[ENCODINGDB[k]] = temp_IQR_result[1]
+      U_IQRdf[ENCODINGDB[k]] = temp_IQR_result[2]
+
+  L_IQRdf['current_time'] = REPORTDAYS
+  M_IQRdf['current_time'] = REPORTDAYS
+  U_IQRdf['current_time'] = REPORTDAYS
+
+  return (L_IQRdf, M_IQRdf, U_IQRdf)
 

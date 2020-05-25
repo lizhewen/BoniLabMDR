@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-from plot_helper import xaxis_label_ticker, coloring_legend
+from plot_helper import xaxis_label_ticker, coloring_legend, df_col_replace
 
 def bsp_plot(df, year_label=5, xlabel='Years', ylabel='Percentage of Population', 
               plot_w=12, plot_h=6, 
@@ -62,6 +62,32 @@ def mdtrg_plot(df, year_label=5, type1=['TYY--Y2.','TYYYYY2.'], type2='KNF--Y2.'
   ax2.xaxis.set_major_locator(ticker.MultipleLocator(xlocator))
   ax2.xaxis.set_major_formatter(ticks_x)
   ax2.grid()
+
+def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, patternlist=['TYY--Y2.','TYYYYY2.']):
+  colors = ['#1F77B4', '#FF7F0E']
+  for (pattern, color) in zip(patternlist, colors):
+    ax.plot(df_m['current_time'], df_m.filter(regex=pattern, axis=1).sum(axis=1), color=color)
+    ax.fill_between(df_m['current_time'], 
+                            df_l.filter(regex=pattern, axis=1).sum(axis=1), 
+                            df_u.filter(regex=pattern, axis=1).sum(axis=1), 
+                            color=color, alpha=0.25)
+
+def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, option=1):
+  df_l = df_col_replace(df_l, drug, option)
+  df_m = df_col_replace(df_m, drug, option)
+  df_u = df_col_replace(df_u, drug, option)
+
+  col_names = list(df_m.columns)
+  mdr_cases = col_names[:-1] # Last four columns are not about MDR
+  mdr_cases.reverse() # reverse to plot most-dangerous type latest
+  for mdr_case in mdr_cases:
+    # only plot double-or-higher resistant
+    if mdr_case[0:1] == '2':
+      color = coloring_legend(mdr_case,option)
+      ax.plot(df_m['current_time'], df_m[mdr_case], label=mdr_case, 
+                      color=color)
+      ax.fill_between(df_m['current_time'], df_l[mdr_case], df_u[mdr_case], 
+                      color=color, alpha=0.25)
 
 def mdr_get_plot(df_list, totaldrugname, strategy, option, 
                  year_label=5, xlabel='Years', 
