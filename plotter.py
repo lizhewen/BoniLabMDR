@@ -45,7 +45,8 @@ def mdtrg_plot(df, year_label=5, type1=['TYY--Y2.','TYYYYY2.'], type2='KNF--Y2.'
 
   ax1 = plt.subplot(2, 1, 1)
   for subtype1 in type1:
-    ax1.plot(df['current_time'], df.filter(regex=subtype1, axis=1).sum(axis=1), label=subtype1)
+    ax1.plot(df['current_time'], df.filter(regex=subtype1, axis=1).\
+              sum(axis=1), label=subtype1)
   ax1.set_xlabel(xlabel)
   ax1.set_ylabel(ylabel)
   ax1.set_title('AQ + DHA-PPQ')
@@ -63,23 +64,44 @@ def mdtrg_plot(df, year_label=5, type1=['TYY--Y2.','TYYYYY2.'], type2='KNF--Y2.'
   ax2.xaxis.set_major_formatter(ticks_x)
   ax2.grid()
 
-def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, patternlist=['TYY--Y2.','TYYYYY2.']):
+def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, patternlist, annoty):
   colors = ['#1F77B4', '#FF7F0E']
   for (pattern, color) in zip(patternlist, colors):
-    ax.plot(df_m['current_time'], df_m.filter(regex=pattern, axis=1).sum(axis=1), color=color)
+    ax.plot(df_m['current_time'], df_m.filter(regex=pattern, axis=1).\
+            sum(axis=1), color=color)
     ax.fill_between(df_m['current_time'], 
                             df_l.filter(regex=pattern, axis=1).sum(axis=1), 
                             df_u.filter(regex=pattern, axis=1).sum(axis=1), 
                             color=color, alpha=0.25)
+  # for most_dange_trip type 1 
+  # calculate genotype freq at last day
+  x_20 = df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).tail(1).values[0]
+  # calculate time until it's 1% of total genotype freq
+  # Get first row # that's bigger than threshold
+  threshold = 0.01
+  try:
+    frn = df_m[df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).\
+                gt(threshold)].index[0]
+    t_01 = df_m.loc[frn, 'current_time']
+  except IndexError:
+    t_01 = 'N/A'
+  # calculate area under median curve
+  yaxis = df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).values
+  xaxis = df_m['current_time'].values
+  auc = np.trapz(yaxis, x=xaxis)
 
-def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, option=1):
+  # annotate
+  ymin, ymax = ax.get_ylim()
+  ax.text(183, annoty, 'X20 = %s\nT.01 = %s\nAUC = %s' % (x_20, t_01, auc))
+
+def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, annoty, option=1):
   df_l = df_col_replace(df_l, drug, option)
   df_m = df_col_replace(df_m, drug, option)
   df_u = df_col_replace(df_u, drug, option)
 
   col_names = list(df_m.columns)
-  mdr_cases = col_names[:-1] # Last four columns are not about MDR
-  mdr_cases.reverse() # reverse to plot most-dangerous type latest
+  mdr_cases = col_names[:-2] # Last four columns are not about MDR
+  most_dang_type = mdr_cases[-1] # get the most dangerous double type for annotation
   for mdr_case in mdr_cases:
     # only plot double-or-higher resistant
     if mdr_case[0:1] == '2':
@@ -88,6 +110,26 @@ def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, option=1):
                       color=color)
       ax.fill_between(df_m['current_time'], df_l[mdr_case], df_u[mdr_case], 
                       color=color, alpha=0.25)
+
+  # for most-dangerous double
+  # calculate genotype freq at last day
+  x_20 = df_m[most_dang_type].tail(1).values[0]
+  # calculate time until it's 1% of total genotype freq
+  # Get first row # that's bigger than threshold
+  threshold = 0.01
+  try:
+    frn = df_m[df_m[most_dang_type].gt(threshold)].index[0]
+    t_01 = df_m.loc[frn, 'current_time']
+  except IndexError:
+    t_01 = 'N/A'
+  # calculate area under median curve
+  yaxis = df_m[most_dang_type].values
+  xaxis = df_m['current_time'].values
+  auc = np.trapz(yaxis, x=xaxis)
+
+  # annotate
+  ymin, ymax = ax.get_ylim()
+  ax.text(183, annoty, 'X20 = %s\nT.01 = %s\nAUC = %s' % (x_20, t_01, auc))
 
 def mdr_get_plot(df_list, totaldrugname, strategy, option, 
                  year_label=5, xlabel='Years', 
@@ -114,7 +156,8 @@ def mdr_get_plot(df_list, totaldrugname, strategy, option,
     mdr_cases.reverse() # reverse to plot most-dangerous type latest
     # Loop thru each MDR case
     for mdr_case in mdr_cases:
-      ax.plot(df['current_time'], df[mdr_case], label=mdr_case, color=coloring_legend(mdr_case,option))
+      ax.plot(df['current_time'], df[mdr_case], label=mdr_case, 
+              color=coloring_legend(mdr_case,option))
     ax.xaxis.set_major_locator(ticker.MultipleLocator(xlocator))
     ax.xaxis.set_major_formatter(ticks_x)
     ax.set(title='(w.r.t. %s)' % drugname)

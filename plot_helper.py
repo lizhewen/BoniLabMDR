@@ -217,7 +217,7 @@ def IQR_compute(filepattern):
   #   the IQR for the genotype frequency and returns 
   #   three dataframes (LQ, Median, and UQ).
   allgenodf = []
-  for i in range(128):
+  for i in range(129):
     allgenodf.append(pd.DataFrame(columns = range(361)))
   from constant import HEADLINE, ENCODINGDB, REPORTDAYS
   for j in range(1,101):
@@ -231,13 +231,23 @@ def IQR_compute(filepattern):
       for line in read_obj:
         write_obj.write(line)
     df = pd.read_csv(dummy_file, sep='\t')
+    # For each file - append genotype freq to 128 sep dfs
     for (genotype, dfcounter) in zip(ENCODINGDB, range(128)):
       allgenodf[dfcounter] = allgenodf[dfcounter].append(df[genotype], ignore_index=True)
+    # For each file - append blood slide prev to the last df
+    allgenodf[128] = allgenodf[128].append(df['blood_slide_prev'], ignore_index=True)
   
-  L_IQRdf = pd.DataFrame(columns = ['current_time'] + ENCODINGDB)
-  M_IQRdf = pd.DataFrame(columns = ['current_time'] + ENCODINGDB)
-  U_IQRdf = pd.DataFrame(columns = ['current_time'] + ENCODINGDB)
+  L_IQRdf = pd.DataFrame(columns = ['current_time', 'blood_slide_prev'] + ENCODINGDB)
+  M_IQRdf = pd.DataFrame(columns = ['current_time', 'blood_slide_prev'] + ENCODINGDB)
+  U_IQRdf = pd.DataFrame(columns = ['current_time', 'blood_slide_prev'] + ENCODINGDB)
 
+  # Recombine bsp IQR results to three dfs
+  bsp_IQR_result = allgenodf[128].quantile([.25, .5, .75]).values.tolist()
+  L_IQRdf['blood_slide_prev'] = bsp_IQR_result[0]
+  M_IQRdf['blood_slide_prev'] = bsp_IQR_result[1]
+  U_IQRdf['blood_slide_prev'] = bsp_IQR_result[2]
+
+  # Recombine genotype freq IQR results to three dfs
   for k in range(128):
     temp_IQR_result = allgenodf[k].quantile([.25, .5, .75]).values.tolist()
     # can't compute IQR for all 0's
