@@ -2,7 +2,7 @@
 
 ###### Author: Eric Zhewen Li<br/>Boni Lab, Center for Infectious Disease Dynamics, Penn State Huck Institutes of the Life Sciences. [mol.ax](http://mol.ax)<br/>Contact: eric@zhewenli.com<br>&copy; 2020. Under MIT License. All Rights Reserved.
 
-This repo contains all the Jupyter Notebook files showing the outcome measure calculation functions for the Multiple-Drug-Resistance (MDR) Analysis. The master branch is a ipynb notebook-only branch. If you wish to view a cleaner version of the code (actual functions written in .py files and then import into notebooks), please use the [organized branch](/tree//organized)
+This repo contains all the Jupyter Notebook files showing the outcome measure calculation functions for the Multiple-Drug-Resistance (MDR) Analysis. The master branch is a ipynb notebook-only branch. If you wish to view a cleaner version of the code (actual functions written in .py files and then import into notebooks), please use the [organized branch](https://github.com/lizhewen/BoniLabMDR/tree/organized)
 
 ## Introduction
 
