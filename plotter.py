@@ -83,6 +83,7 @@ def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, patternlist, annoty):
     frn = df_m[df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).\
                 gt(threshold)].index[0]
     t_01 = df_m.loc[frn, 'current_time']
+    t_01 = round(t_01, 1)
   except IndexError:
     t_01 = 'N/A'
   # calculate area under median curve
@@ -91,7 +92,8 @@ def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, patternlist, annoty):
   auc = np.trapz(yaxis, x=xaxis)
 
   # annotate
-  ymin, ymax = ax.get_ylim()
+  x_20 = round(x_20, 1)
+  auc = round(auc, 1)
   ax.text(183, annoty, 'X20 = %s\nT.01 = %s\nAUC = %s' % (x_20, t_01, auc))
 
 def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, annoty, option=1):
