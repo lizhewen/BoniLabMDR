@@ -29,7 +29,7 @@ def bsp_plot(df, year_label=5, xlabel='Years', ylabel='Percentage of Population'
 
   plt.grid()
 
-def mdtrg_plot(df, year_label=5, type1=['TYY--Y2.','TYYYYY2.'], type2='KNF--Y2.', 
+def mdtrg_plot(df, year_label=5, type1='TYY..Y2.', type2='KNF--Y2.', 
               xlabel='Years', ylabel='Genotype Frequency', plot_w=12, plot_h=10, 
               suptitle='Evolution Trends of Most-Dangerous Triple-Resistant Genotypes'):
   # Most Dangerous Triple-Resistant Genotype Evolution Trend Plot
@@ -44,9 +44,8 @@ def mdtrg_plot(df, year_label=5, type1=['TYY--Y2.','TYYYYY2.'], type2='KNF--Y2.'
   ticks_x = xaxis_label_ticker()
 
   ax1 = plt.subplot(2, 1, 1)
-  for subtype1 in type1:
-    ax1.plot(df['current_time'], df.filter(regex=subtype1, axis=1).\
-              sum(axis=1), label=subtype1)
+  ax1.plot(df['current_time'], df.filter(regex=type1, axis=1).\
+              sum(axis=1), label=type1)
   ax1.set_xlabel(xlabel)
   ax1.set_ylabel(ylabel)
   ax1.set_title('AQ + DHA-PPQ')
@@ -64,31 +63,29 @@ def mdtrg_plot(df, year_label=5, type1=['TYY--Y2.','TYYYYY2.'], type2='KNF--Y2.'
   ax2.xaxis.set_major_formatter(ticks_x)
   ax2.grid()
 
-def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, patternlist, annoty=None):
-  colors = ['#1F77B4', '#FF7F0E']
-  for (pattern, color) in zip(patternlist, colors):
-    ax.plot(df_m['current_time'], df_m.filter(regex=pattern, axis=1).\
-            sum(axis=1), color=color)
-    ax.fill_between(df_m['current_time'], 
+def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, pattern, annoty=None):
+  ax.plot(df_m['current_time'], df_m.filter(regex=pattern, axis=1).\
+            sum(axis=1))
+  ax.fill_between(df_m['current_time'], 
                             df_l.filter(regex=pattern, axis=1).sum(axis=1), 
                             df_u.filter(regex=pattern, axis=1).sum(axis=1), 
-                            color=color, alpha=0.25)
+                            alpha=0.25)
   if annoty is not None:
     # for most_dange_trip type 1 
     # calculate genotype freq at last day
-    x_20 = df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).tail(1).values[0]
+    x_20 = df_m.filter(regex=pattern, axis=1).sum(axis=1).tail(1).values[0]
     # calculate time until it's 1% of total genotype freq
     # Get first row # that's bigger than threshold
     threshold = 0.01
     try:
-      frn = df_m[df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).\
+      frn = df_m[df_m.filter(regex=pattern, axis=1).sum(axis=1).\
                   gt(threshold)].index[0]
       t_01 = df_m.loc[frn, 'current_time']
       t_01 = round(t_01/365, 1)
     except IndexError:
       t_01 = 'N/A'
     # calculate area under median curve
-    yaxis = df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).values
+    yaxis = df_m.filter(regex=pattern, axis=1).sum(axis=1).values
     xaxis = df_m['current_time'].values
     auc = np.trapz(yaxis, x=xaxis)
 
@@ -127,7 +124,7 @@ def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, annoty=None):
     try:
       frn = df_m[df_m[most_dang_type].gt(threshold)].index[0]
       t_01 = df_m.loc[frn, 'current_time']
-      t_01 = round(t_01, 1)
+      t_01 = round(t_01/365, 1)
     except IndexError:
       t_01 = 'N/A'
     # calculate area under median curve
@@ -136,7 +133,8 @@ def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, annoty=None):
     auc = np.trapz(yaxis, x=xaxis)
 
     # annotate
-    auc = round(auc, 1)
+    x_20 = round(x_20, 3)
+    auc = round(auc, 2)
     ax.text(183, annoty, 'X20 = %s\nT.01 = %s\nAUC = %s' % (x_20, t_01, auc))
 
 def mdr_get_plot(df_list, totaldrugname, strategy, option, 
