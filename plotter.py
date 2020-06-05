@@ -64,7 +64,7 @@ def mdtrg_plot(df, year_label=5, type1=['TYY--Y2.','TYYYYY2.'], type2='KNF--Y2.'
   ax2.xaxis.set_major_formatter(ticks_x)
   ax2.grid()
 
-def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, patternlist, annoty):
+def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, patternlist, annoty=None):
   colors = ['#1F77B4', '#FF7F0E']
   for (pattern, color) in zip(patternlist, colors):
     ax.plot(df_m['current_time'], df_m.filter(regex=pattern, axis=1).\
@@ -73,37 +73,39 @@ def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, patternlist, annoty):
                             df_l.filter(regex=pattern, axis=1).sum(axis=1), 
                             df_u.filter(regex=pattern, axis=1).sum(axis=1), 
                             color=color, alpha=0.25)
-  # for most_dange_trip type 1 
-  # calculate genotype freq at last day
-  x_20 = df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).tail(1).values[0]
-  # calculate time until it's 1% of total genotype freq
-  # Get first row # that's bigger than threshold
-  threshold = 0.01
-  try:
-    frn = df_m[df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).\
-                gt(threshold)].index[0]
-    t_01 = df_m.loc[frn, 'current_time']
-    t_01 = round(t_01, 1)
-  except IndexError:
-    t_01 = 'N/A'
-  # calculate area under median curve
-  yaxis = df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).values
-  xaxis = df_m['current_time'].values
-  auc = np.trapz(yaxis, x=xaxis)
+  if annoty is not None:
+    # for most_dange_trip type 1 
+    # calculate genotype freq at last day
+    x_20 = df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).tail(1).values[0]
+    # calculate time until it's 1% of total genotype freq
+    # Get first row # that's bigger than threshold
+    threshold = 0.01
+    try:
+      frn = df_m[df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).\
+                  gt(threshold)].index[0]
+      t_01 = df_m.loc[frn, 'current_time']
+      t_01 = round(t_01/365, 1)
+    except IndexError:
+      t_01 = 'N/A'
+    # calculate area under median curve
+    yaxis = df_m.filter(regex=patternlist[0], axis=1).sum(axis=1).values
+    xaxis = df_m['current_time'].values
+    auc = np.trapz(yaxis, x=xaxis)
 
-  # annotate
-  x_20 = round(x_20, 1)
-  auc = round(auc, 1)
-  ax.text(183, annoty, 'X20 = %s\nT.01 = %s\nAUC = %s' % (x_20, t_01, auc))
+    # annotate
+    x_20 = round(x_20, 3)
+    auc = round(auc, 2)
+    ax.text(183, annoty, 'X20 = %s\nT.01 = %s\nAUC = %s' % (x_20, t_01, auc))
 
-def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, annoty, option=1):
+def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, annoty=None):
+  option = 1
+  
   df_l = df_col_replace(df_l, drug, option)
   df_m = df_col_replace(df_m, drug, option)
   df_u = df_col_replace(df_u, drug, option)
 
   col_names = list(df_m.columns)
   mdr_cases = col_names[:-2] # Last four columns are not about MDR
-  most_dang_type = mdr_cases[-1] # get the most dangerous double type for annotation
   for mdr_case in mdr_cases:
     # only plot double-or-higher resistant
     if mdr_case[0:1] == '2':
@@ -113,25 +115,29 @@ def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, annoty, option=1):
       ax.fill_between(df_m['current_time'], df_l[mdr_case], df_u[mdr_case], 
                       color=color, alpha=0.25)
 
-  # for most-dangerous double
-  # calculate genotype freq at last day
-  x_20 = df_m[most_dang_type].tail(1).values[0]
-  # calculate time until it's 1% of total genotype freq
-  # Get first row # that's bigger than threshold
-  threshold = 0.01
-  try:
-    frn = df_m[df_m[most_dang_type].gt(threshold)].index[0]
-    t_01 = df_m.loc[frn, 'current_time']
-  except IndexError:
-    t_01 = 'N/A'
-  # calculate area under median curve
-  yaxis = df_m[most_dang_type].values
-  xaxis = df_m['current_time'].values
-  auc = np.trapz(yaxis, x=xaxis)
+  if annoty is not None:
+    # get the most dangerous double type for annotation
+    most_dang_type = mdr_cases[-1]
+    # for most-dangerous double
+    # calculate genotype freq at last day
+    x_20 = df_m[most_dang_type].tail(1).values[0]
+    # calculate time until it's 1% of total genotype freq
+    # Get first row # that's bigger than threshold
+    threshold = 0.01
+    try:
+      frn = df_m[df_m[most_dang_type].gt(threshold)].index[0]
+      t_01 = df_m.loc[frn, 'current_time']
+      t_01 = round(t_01, 1)
+    except IndexError:
+      t_01 = 'N/A'
+    # calculate area under median curve
+    yaxis = df_m[most_dang_type].values
+    xaxis = df_m['current_time'].values
+    auc = np.trapz(yaxis, x=xaxis)
 
-  # annotate
-  ymin, ymax = ax.get_ylim()
-  ax.text(183, annoty, 'X20 = %s\nT.01 = %s\nAUC = %s' % (x_20, t_01, auc))
+    # annotate
+    auc = round(auc, 1)
+    ax.text(183, annoty, 'X20 = %s\nT.01 = %s\nAUC = %s' % (x_20, t_01, auc))
 
 def mdr_get_plot(df_list, totaldrugname, strategy, option, 
                  year_label=5, xlabel='Years', 
@@ -152,9 +158,9 @@ def mdr_get_plot(df_list, totaldrugname, strategy, option,
 
   # Looping thru all therapy and draw subplot
   for (ax, df, drugname) in zip(axes.flatten(), df_list, totaldrugname):
-    annotate_place = df.iloc[:,:-4].max().max()
+    annotate_place = df.iloc[:,:-2].max().max()
     col_names = list(df.columns)
-    mdr_cases = col_names[:-4] # Last four columns are not about MDR
+    mdr_cases = col_names[:-2] # Last four columns are not about MDR
     mdr_cases.reverse() # reverse to plot most-dangerous type latest
     # Loop thru each MDR case
     for mdr_case in mdr_cases:
