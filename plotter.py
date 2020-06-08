@@ -81,7 +81,7 @@ def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, pattern, annoty=None):
       frn = df_m[df_m.filter(regex=pattern, axis=1).sum(axis=1).\
                   gt(threshold)].index[0]
       t_01 = df_m.loc[frn, 'current_time']
-      t_01 = round(t_01/365, 1)
+      t_01 = round(t_01/365-10, 1)
     except IndexError:
       t_01 = 'N/A'
     # calculate area under median curve
@@ -124,7 +124,7 @@ def geno_trend_plot_double_higher(ax, df_l, df_m, df_u, drug, annoty=None):
     try:
       frn = df_m[df_m[most_dang_type].gt(threshold)].index[0]
       t_01 = df_m.loc[frn, 'current_time']
-      t_01 = round(t_01/365, 1)
+      t_01 = round(t_01/365-10, 1)
     except IndexError:
       t_01 = 'N/A'
     # calculate area under median curve
