@@ -65,11 +65,11 @@ def mdtrg_plot(df, year_label=5, type1='TYY..Y2.', type2='KNF--Y2.',
 
 def geno_trend_plot_most_dange_trip(ax, df_l, df_m, df_u, pattern, annoty=None):
   ax.plot(df_m['current_time'], df_m.filter(regex=pattern, axis=1).\
-            sum(axis=1))
+            sum(axis=1), color='#800080')
   ax.fill_between(df_m['current_time'], 
                             df_l.filter(regex=pattern, axis=1).sum(axis=1), 
                             df_u.filter(regex=pattern, axis=1).sum(axis=1), 
-                            alpha=0.25)
+                            color='#800080', alpha=0.25)
   if annoty is not None:
     # for most_dange_trip type 1 
     # calculate genotype freq at last day
